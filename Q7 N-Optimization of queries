@@ -1,0 +1,21 @@
+/* To optimize this query without changing the table structure or adding indexes,
+we can rewrite the query to avoid sorting the entire table. Instead of sorting the entire table by Water_Temperature and then returning the top 10 results, 
+we can use a subquery to first identify the top 10 values of Water_Temperature and then join that result back to the original table to retrieve the corresponding rows. */
+
+SELECT
+  water_data.Date,
+  water_data.Time,
+  water_data.Water_Temperature
+FROM
+  water_data
+  JOIN (
+    SELECT
+      Water_Temperature
+    FROM
+      water_data
+    ORDER BY
+      Water_Temperature DESC
+    LIMIT 10
+  ) top_temps ON water_data.Water_Temperature = top_temps.Water_Temperature
+ORDER BY
+  water_data.Water_Temperature DESC;

@@ -1,0 +1,9 @@
+SELECT
+  Date,
+  Time,
+  Water_Temperature
+FROM
+  water_data
+ORDER BY
+  Water_Temperature DESC
+LIMIT 10;

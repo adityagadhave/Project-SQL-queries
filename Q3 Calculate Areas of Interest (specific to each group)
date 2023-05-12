@@ -1,0 +1,15 @@
+WITH groups AS (
+  SELECT
+    CASE
+      WHEN water_temperature >= 25 AND water_temperature < 30 THEN 'Group A'
+      WHEN water_temperature >= 20 AND water_temperature < 25 THEN 'Group B'
+      ELSE 'Other'
+    END AS group_name,
+    ST_MakePoint(longitude, latitude) AS point_geom
+  FROM water_data
+)
+SELECT
+  group_name,
+  ST_Area(ST_ConvexHull(ST_Collect(point_geom))) AS area
+FROM groups
+GROUP BY group_name;

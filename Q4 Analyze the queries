@@ -1,0 +1,27 @@
+Below is the summary of what each query does. 
+
+#1 Retrieve Locations of specific features
+
+This query retrieves the location data from the water_data table for all entries with a date of '2019-07-15'.
+ST_Point(Longitude, Latitude) creates a point geometry from the Longitude and Latitude values of each entry in the water_data table.
+ST_SetSRID() sets the spatial reference system identifier (SRID) of the point geometry to 4326, which is the identifier for the WGS 84 coordinate reference system used for GPS coordinates.
+ST_AsText() converts the point geometry to a well-known text (WKT) format, which is a text representation of the geometry that can be easily read by humans and other software.
+AS Location renames the resulting column to Location for clarity.
+The result of this query will be a table with a single column Location, which contains the WKT representation of the point geometry for each entry in water_data that matches the specified date.
+
+#2 Calculate Distance between points
+
+This query calculates the distance between two points in meters using the PostGIS extension for PostgreSQL. 
+ST_Distance: This is a PostGIS function that calculates the distance between two geometries.
+ST_Transform: This function is used to transform a geometry from one spatial reference system (SRS) to another. In this case, the coordinates of the two points are transformed from the WGS 84 geographic coordinate system (SRID 4326) to the Web Mercator projected coordinate system (SRID 3857), which is commonly used for online mapping applications.
+ST_SetSRID: This function sets the spatial reference ID (SRID) of a geometry.
+ST_Point: This function creates a point geometry from the given coordinates.
+-74.0059, 40.7128 and -77.0369, 38.9072: These are the longitude and latitude coordinates of the two points in WGS 84 coordinate system.
+The result of the query is the distance between the two points in meters, which is returned as distance_in_meters.
+
+#3 Calculate Areas of Interest (specific to each group)
+
+This query performs a spatial analysis on the "water_data" table, specifically calculating the area of interest for each group of water temperature readings.
+The query begins by creating a common table expression (CTE) called "groups". This CTE selects the water temperature readings and groups them into three categories based on their value, with a corresponding group name assigned to each category. It also creates a point geometry from the latitude and longitude coordinates of each reading using the ST_MakePoint() function.
+Next, the query selects the group_name and calculates the area of the convex hull (the smallest convex polygon that can contain all the points) of the point geometries for each group. This is done using the ST_Area() function with the ST_ConvexHull() and ST_Collect() functions.
+Finally, the results are grouped by group_name and returned as output. The area is calculated in the spatial reference system (SRS) specified in the point geometries (which is assumed to be 4326, the standard WGS84 geographic coordinate system), and the result is returned in square meters.

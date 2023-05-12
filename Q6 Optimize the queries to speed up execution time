@@ -1,0 +1,14 @@
+To optimize this query, I have dcreate an index on the Water_Temperature column. 
+This will allow the database to more efficiently sort the data based on the Water_Temperature values, resulting in faster execution time.
+
+CREATE INDEX water_temperature_idx ON water_data (Water_Temperature);
+
+SELECT
+  Date,
+  Time,
+  Water_Temperature
+FROM
+  water_data
+ORDER BY
+  Water_Temperature DESC
+LIMIT 10;
